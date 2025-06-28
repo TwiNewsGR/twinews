@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>モバイル版ツイニュース</title>
+    <link rel="icon" href="twinews.png" type="image/png">
+    <meta property="og:image" content="heather.jpg">
+    <meta property="og:title" content="ツイニュース">
+    <meta property="og:description" content="ツイニュースは最新のニュースを取得できます。">
+    <meta property="og:url" content="https://twinews.vercel.app/">
+
+    <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@news_xt" />
+<meta name="twitter:title" content="ツイニュース" />
+<meta name="twitter:description" content="ツイニュースは最新のニュースを取得できます。" />
+<meta name="twitter:image" content="heather.jpg" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+
+      }
+        .news-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .news-item img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .news-content {
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+        .news-content h2 {
+            font-size: 18px;
+            margin: 0;
+        }
+        .news-content p {
+            font-size: 14px;
+            color: #666;
+        }
+        .buttons {
+            margin-top: 10px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-right: 5px;
+            font-size: 12px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <heather>
+        <img src="heather.jpg" width="200" >
+    </heather>
+    <p>一時的にサービスを停止中です。</p>
+    <div class="container">
+        <div id="news-container"></div>
+    </div>
+    <script>
+        // API設定
+        const API_URL = 'https://gnews.io/api/v4/top-headlines';
+        const API_KEY = 'fg'; // GNews APIキーをここに入力
+
+        // ニュースを取得する関数
+        async function fetchNews() {
+            try {
+                const response = await fetch(`${API_URL}?token=${API_KEY}&lang=ja&country=jp`);
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー: ${response.status}`);
+                }
+                const data = await response.json();
+                displayNews(data.articles || []);
+            } catch (error) {
+                console.error('ニュースの取得に失敗しました:', error);
+                document.getElementById('news-container').innerHTML = `<p style="color: red;">ニュースの取得に失敗しました</p>`;
+            }
+        }
+
+        // ニュースを表示する関数
+        function displayNews(articles) {
+            const container = document.getElementById('news-container');
+            container.innerHTML = '';
+            articles.forEach(article => {
+                const item = document.createElement('div');
+                item.classList.add('news-item');
+                item.innerHTML = `
+                    <img src="${article.image || 'https://via.placeholder.com/150'}" alt="ニュース画像">
+                    <div class="news-content">
+                        <h2><a href="${article.url}" target="_blank">${article.title}</a></h2>
+                        <div class="buttons">
+                            <a class="btn" href="${article.url}" target="_blank">続きを読む</a>
+                            <a class="btn" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(article.url)}#ツイニュース" target="_blank">Twitterで共有</a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // 初期化
+        fetchNews();
+    </script>
+</body>
+</html>
