@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "src": "/503",
+      "status": 503,
+      "dest": "/public/503.html"
+    }
+  ]
+}
