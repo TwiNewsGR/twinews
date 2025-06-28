@@ -1,0 +1,37 @@
+/* CSS */
+body {
+  font-family: 'Yu Gothic', sans-serif;
+  background-color: #f4f4f9; /* ← ここ変更したよ！ */
+  color: #444;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #ffccdd;
+  color: white;
+  text-align: center;
+  padding: 2em 1em;
+  border-bottom: 4px solid #ffaac8;
+}
+
+main {
+  padding: 2em;
+}
+
+.blog-post {
+  background: #fff;
+  border-left: 6px solid #ffaac8;
+  padding: 1em;
+  margin-bottom: 1.5em;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+footer {
+  text-align: center;
+  padding: 1em;
+  background: #ffeeee;
+  font-size: 0.9em;
+}
+
