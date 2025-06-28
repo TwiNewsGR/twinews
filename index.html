@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ツイニュースベータ（今後改善予定）</title>
+    <link rel="icon" href="twinews.png" type="image/png">
+    <meta property="og:image" content="heather.jpg">
+    <meta property="og:title" content="ツイニュース">
+    <meta property="og:description" content="ツイニュースは最新のニュースを取得できます。">
+    <meta property="og:url" content="https://twinews.vercel.app/">
+
+    <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@news_xt" />
+<meta name="twitter:title" content="ツイニュース" />
+<meta name="twitter:description" content="ツイニュースは最新のニュースを取得できます。" />
+<meta name="twitter:image" content="heather.jpg" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .logo img {
+      height: 32px; /* ロゴ画像の高さを調整 */
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #222;
+      font-weight: 500;
+    }
+
+    .contact-button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 80%;
+            max-width: 800px;
+            margin: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border-radius: 8px;
+            margin: 10px 0;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        li:hover {
+            transform: scale(1.02);
+        }
+
+        a {
+            color: #1a73e8;
+            font-size: 18px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        p {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+  <header>
+    <div class="logo">
+      <img src="https://twinews.vercel.app/img/logo.png" alt="ロゴ">
+    </div>
+    <nav>
+      <a href="/about">ツイニュースについて</a>
+      <a href="/mobile">スマホ版</a>
+      <a href="https://bsky.app/profile/twinews.bsky.social">ブルースカイ</a>
+      <a href="/blog">ブログ</a>
+      <a href="/fm">運営</a>
+      <a href="/contact" class="contact-button">お問い合わせ</a>
+    </nav>
+  </header>        
+        <ul id="news-list"></ul>
+    </div>
+
+    <script>
+        const proxyUrl = 'https://api.allorigins.win/get?url=';  // AllOriginsプロキシ
+        const targetUrl = 'https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja';  // 日本専用のGoogleニュースRSS
+
+        $.ajax({
+            url: proxyUrl + encodeURIComponent(targetUrl),  // プロキシを通してRSSを取得
+            dataType: "json",
+            success: function (data) {
+                const xml = data.contents;
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xml, "text/xml");
+
+                $("#news-list").empty();  // 最初にリストを空にする
+
+                $(xmlDoc).find("item").each(function () {
+                    const title = $(this).find("title").text();
+                    const link = $(this).find("link").text();
+                    const description = $(this).find("description").text();
+
+                    // 個別のニュースをリストアイテムとして追加
+                    const newsItem = `
+                        <li>
+                            <a href="${link}" target="_blank">${title}</a>
+                            <p>${description}</p>
+                        </li>
+                    `;
+
+                    $("#news-list").append(newsItem);  // #news-listに追加
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("エラーが発生しました:", error);
+            }
+        });
+    </script>
+</body>
+</html>
